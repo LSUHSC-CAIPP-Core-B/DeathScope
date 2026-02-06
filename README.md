@@ -1,4 +1,5 @@
-# CellDetection
+# DeathScope
+
 Repository for died cell detection with apoptosis and necroptosis distinction. It provides training and inference pipelines for training cell detection model as well as all needed data preparation steps.
 
 ## cell_adjustor
