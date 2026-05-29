@@ -193,3 +193,9 @@ outputs/logs/
 data/
 outputs/
 venv/
+
+
+# models documentation
+models/yolo/
+models/pyroptosis/
+
