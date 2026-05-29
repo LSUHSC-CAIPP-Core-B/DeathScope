@@ -1,0 +1,19 @@
+# DeathScope runtime requirements.
+# Tested with Python 3.11 on Linux.
+# Use Python 3.11 or 3.12 for this repository. Python 3.13 may trigger
+# source builds for pinned dependencies such as matplotlib.
+#
+# For GPU acceleration, install a matching PyTorch build for your CUDA stack
+# before installing this file if the pinned wheel below is not appropriate for
+# your environment.
+
+albumentations==1.4.1
+matplotlib==3.8.3
+numpy==1.26.4
+opencv-python-headless==4.9.0.80
+pandas==2.2.1
+timm==1.0.26
+torch==2.10.0
+torchvision==0.25.0
+tqdm==4.67.3
+ultralytics==8.4.19

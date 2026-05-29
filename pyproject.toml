@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deathscope"
+version = "0.1.0"
+description = "DeathScope: label-free detection and phenotyping of programmed cell death in phase-contrast imaging."
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+authors = [
+  { name = "DeathScope authors" }
+]
+dependencies = [
+  "albumentations==1.4.1",
+  "matplotlib==3.8.3",
+  "numpy==1.26.4",
+  "opencv-python-headless==4.9.0.80",
+  "pandas==2.2.1",
+  "timm==1.0.26",
+  "torch==2.10.0",
+  "torchvision==0.25.0",
+  "tqdm==4.67.3",
+  "ultralytics==8.4.19",
+]
+
+[project.urls]
+Homepage = "https://github.com/LSUHSC-CAIPP-Core-B/DeathScope"
+Repository = "https://github.com/LSUHSC-CAIPP-Core-B/DeathScope"
+
+[project.scripts]
+deathscope-batch-predict = "deathscope.cli:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["deathscope", "deathscope.*"]

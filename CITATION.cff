@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: DeathScope
+message: "If you use this repository, please cite the associated manuscript and archived software release."
+type: software
+authors:
+  - family-names: Wang
+    given-names: Jian
+repository-code: "https://github.com/LSUHSC-CAIPP-Core-B/DeathScope"
+abstract: "Label-free AI pipeline for single-cell detection and phenotyping of programmed cell death in Incucyte phase-contrast imaging."
+license: "NOASSERTION"
+version: "0.1.0"
+date-released: 2026-04-30
+preferred-citation:
+  type: article
+  title: "DeathScope: A High-Throughput YOLO-Powered Cell Death Detection in Incucyte Phase-Contrast Imaging"
+  authors:
+    - family-names: Wang
+      given-names: Jian
+  journal: ""
+  status: "manuscript in preparation"

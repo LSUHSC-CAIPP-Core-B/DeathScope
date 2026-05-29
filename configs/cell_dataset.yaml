@@ -1,0 +1,22 @@
+# Example DeathScope dataset configuration for Ultralytics YOLO.
+# Update `path` to your dataset root before training.
+
+path: ../data/CellDataset
+
+train:
+  - Apoptosis/images/train
+  - Necroptosis/images/train
+
+val:
+  - Apoptosis/images/val
+  - Necroptosis/images/val
+
+test:
+  - Apoptosis/images/test
+  - Necroptosis/images/test
+
+nc: 2
+
+names:
+  0: apoptosis
+  1: necroptosis

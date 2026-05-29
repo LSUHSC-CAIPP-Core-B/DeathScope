@@ -1,8 +1,0 @@
-path: '/home/cc2/Documents/CellDetection/Test Data/Apoptosis/DATA/Apoptosis'
-train: 'images/train'
-val: 'images/val'
-
-nc: 1
-
-names:
-  0: 'apoptosis'
