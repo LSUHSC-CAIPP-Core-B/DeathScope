@@ -1,6 +1,8 @@
 # DeathScope
 
-![DeathScope logo](docs/deathscope_logo.png)
+<p align="center">
+  <img src="docs/deathscope_logo.png" alt="DeathScope logo" width="180">
+</p>
 
 DeathScope is a label-free image-analysis pipeline for single-cell detection and phenotyping of programmed cell death in Incucyte phase-contrast time-lapse imaging. The repository contains the code used for the manuscript `DeathScope: A High-Throughput YOLO-Powered Cell Death Detection in Incucyte Phase-Contrast Imaging`, including:
 
