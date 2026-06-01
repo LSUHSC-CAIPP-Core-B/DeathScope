@@ -15,7 +15,9 @@ DeathScope is a label-free image-analysis pipeline for single-cell detection and
 
 MEFs undergoing T/S/V-induced necroptosis visualized with DeathScope:
 
-[Watch the demo video: `A2_2_death_image_green_wphase.mp4`](docs/A2_2_death_image_green_wphase.mp4)
+[![DeathScope necroptosis demo](docs/A2_2_death_image_green_wphase.gif)](docs/A2_2_death_image_green_wphase.mp4)
+
+Click the preview above to open the full-resolution MP4: [`A2_2_death_image_green_wphase.mp4`](docs/A2_2_death_image_green_wphase.mp4)
 
 ## Status
 
