@@ -11,6 +11,16 @@ DeathScope is a label-free image-analysis pipeline for single-cell detection and
 - an optional ConvNeXt-based second-stage classifier to split apoptosis-like regions into apoptosis versus pyroptosis
 - training and batch-inference utilities used to generate manuscript figures and kinetics tables
 
+## Results demo
+
+MEFs undergoing T/S/V-induced necroptosis visualized with DeathScope:
+
+<p align="center">
+  <video src="docs/A2_2_death_image_green_wphase.mp4" controls muted playsinline width="720"></video>
+</p>
+
+If your Markdown viewer does not render embedded video, open the file directly: [A2_2_death_image_green_wphase.mp4](docs/A2_2_death_image_green_wphase.mp4)
+
 ## Status
 
 This repository contains the public code release for the core DeathScope detection, heatmap inference, ConvNeXt refinement, and training workflows described in the manuscript.
