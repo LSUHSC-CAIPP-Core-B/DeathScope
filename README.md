@@ -1,4 +1,3 @@
-# DeathScope
 
 <p align="center">
   <img src="docs/deathscope_logo.png" alt="DeathScope logo" width="180">
