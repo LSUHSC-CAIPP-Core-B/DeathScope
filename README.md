@@ -7,12 +7,13 @@
 <div align="center">
 
 [![][black-shield]][black] [![Made with Jupyter](https://img.shields.io/badge/Made%20with-Jupyter-orange?style=flat&logo=Jupyter)](https://jupyter.org/try) [![Made with Python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg?style=flat&logo=python)](https://www.python.org/) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat)](LICENSE)
+
 </div>
 
 [black]: https://www.lsuhs.edu/centers/center-for-applied-immunology-and-pathological-processes/bioinformatics-modeling-core
 [black-shield]: https://img.shields.io/badge/LSUHS-CAIPP_Modelling_Core-FFBF00.svg?style=flat&labelColor=purple
 
-DeathScope is a label-free image-analysis pipeline for single-cell detection and phenotyping of programmed cell death in Incucyte phase-contrast time-lapse imaging. The repository contains the code used for the manuscript `DeathScope: A High-Throughput YOLO-Powered Cell Death Detection in Incucyte Phase-Contrast Imaging`, including:
+DeathScope is a label-free image-analysis pipeline for single-cell detection and phenotyping of programmed cell death in Incucyte phase-contrast time-lapse imaging. The repository contains the code used for the manuscript `DeathScope: A label-free AI framework for single-cell analysis of regulated cell death in Incucyte imaging`, including:
 
 - a YOLOv8-based detector for apoptosis and necroptosis
 - RMH inference (`random cropping -> multiple predictions -> heatmap`) for full-frame probability maps
