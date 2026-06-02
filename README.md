@@ -1,3 +1,5 @@
+# DeathScope
+
 <p align="center">
   <img src="docs/deathscope_logo.png" alt="DeathScope logo" width="180">
 </p>
@@ -11,14 +13,16 @@
 [black]: https://www.lsuhs.edu/centers/center-for-applied-immunology-and-pathological-processes/bioinformatics-modeling-core
 [black-shield]: https://img.shields.io/badge/LSUHS-CAIPP_Modelling_Core-FFBF00.svg?style=flat&labelColor=purple
 
-DeathScope is a label-free image-analysis pipeline for single-cell detection and phenotyping of programmed cell death in Incucyte phase-contrast time-lapse imaging. The repository contains the code used for the manuscript `DeathScope: A label-free AI framework for single-cell analysis of regulated cell death in Incucyte imaging`, including:
+DeathScope is a label-free image-analysis pipeline for single-cell detection and phenotyping of programmed cell death in Incucyte phase-contrast time-lapse imaging. This repository contains the public code release associated with the manuscript `DeathScope: A label-free AI framework for single-cell analysis of regulated cell death in Incucyte imaging`.
+
+The released workflows include:
 
 - a YOLOv8-based detector for apoptosis and necroptosis
 - RMH inference (`random cropping -> multiple predictions -> heatmap`) for full-frame probability maps
 - an optional ConvNeXt-based second-stage classifier to split apoptosis-like regions into apoptosis versus pyroptosis
 - training and batch-inference utilities used to generate manuscript figures and kinetics tables
 
-## Results demo
+## Results Demo
 <div align="center">
 
 MEFs undergoing T/S/V-induced necroptosis visualized with DeathScope:
@@ -32,13 +36,15 @@ Click the preview above to open the full-resolution MP4: [`A2_2_death_image_gree
 
 ## Status
 
-This repository contains the public code release for the core DeathScope detection, heatmap inference, ConvNeXt refinement, and training workflows described in the manuscript.
+This repository contains the public code release for the core DeathScope detection, heatmap inference, ConvNeXt refinement, and training workflows described in the manuscript. Example datasets, trained model assets, training notebooks, and manuscript-supporting documentation are included where appropriate.
 
-## Repository layout
+## Repository Layout
 
 ```text
 .
 ├── README.md
+├── LICENSE
+├── CODE_OF_CONDUCT.md
 ├── requirements.txt
 ├── pyproject.toml
 ├── CITATION.cff
@@ -49,6 +55,8 @@ This repository contains the public code release for the core DeathScope detecti
 │   ├── README.md
 │   └── cell_dataset.yaml
 ├── docs/
+│   ├── A2_2_death_image_green_wphase.gif
+│   ├── A2_2_death_image_green_wphase.mp4
 │   ├── README.md
 │   └── deathscope_logo.png
 ├── examples/
@@ -62,8 +70,6 @@ This repository contains the public code release for the core DeathScope detecti
 │   │   └── convnext_large_model_best.pth
 │   └── yolo/
 │       └── deathscope_yolov8l.pt
-├── outputs/
-│   └── logs/
 ├── scripts/
 │   ├── README.md
 │   └── batch_predict.py
@@ -74,6 +80,7 @@ This repository contains the public code release for the core DeathScope detecti
 │       ├── cli.py
 │       └── pyro_classifier.py
 └── training/
+    ├── README.md
     ├── ConvNeXt/
     │   ├── README.md
     │   ├── ConvNeXt-Large_DataPreparation.ipynb
@@ -86,9 +93,9 @@ This repository contains the public code release for the core DeathScope detecti
         └── train_yolo_script.py
 ```
 
-## Method summary
+## Method Summary
 
-The manuscript describes a two-stage workflow.
+The manuscript describes a two-stage workflow:
 
 1. Phase-contrast images are processed with a YOLOv8 detector trained on fluorescence-anchored annotations generated with FluoroBoxer.
 2. For full-frame inference, DeathScope uses RMH aggregation: many random overlapping crops are scored independently and merged into apoptosis and necroptosis heatmaps in image coordinates.
@@ -124,7 +131,7 @@ pip install --upgrade pip
 pip install -e .
 ```
 
-Then you can run:
+Then confirm the CLI is available:
 
 ```bash
 deathscope-batch-predict --help
@@ -135,7 +142,7 @@ Notes:
 - Install a PyTorch build appropriate for your platform and CUDA stack if you need GPU inference or training.
 - The repository currently pins Python dependencies for reproducibility of the code release, not for minimal installation size.
 
-## Quick start
+## Quick Start
 
 ### 1. Batch heatmap inference on an Incucyte-style dataset
 
@@ -151,10 +158,10 @@ dataset_name/
     └── ...
 ```
 
-Run the standard apoptosis/necroptosis pipeline:
+Run the standard apoptosis/necroptosis pipeline on the included example dataset:
 
 ```bash
-python scripts/batch_predict.py \
+deathscope-batch-predict \
   --input-root examples \
   --pattern "mef_tsv_demo" \
   --model models/yolo/deathscope_yolov8l.pt \
@@ -164,7 +171,7 @@ python scripts/batch_predict.py \
 Run the pyroptosis-enabled workflow:
 
 ```bash
-python scripts/batch_predict.py \
+deathscope-batch-predict \
   --input-root examples \
   --pattern "mef_tsv_demo" \
   --model models/yolo/deathscope_yolov8l.pt \
@@ -206,7 +213,7 @@ python training/YOLO/train_yolo_script.py --data configs/cell_dataset.yaml --mod
 
 ConvNeXt classifier preparation, training, plotting, and prediction notebooks are documented under [training/ConvNeXt/README.md](training/ConvNeXt/README.md).
 
-## Inputs and outputs
+## Inputs And Outputs
 
 ### Inputs
 
@@ -222,12 +229,11 @@ ConvNeXt classifier preparation, training, plotting, and prediction notebooks ar
 - per-image and aggregated kinetics CSV files
 - overlay PNGs for visual inspection
 
-## Release guidance
+## Release Guidance
 
 Before public submission or publication, confirm the following:
 
 - replace placeholder URLs and DOIs in the availability documents with final archival links
-- decide and add an explicit software license
 - move large raw datasets and final trained weights to an archival host such as Zenodo, Figshare, or institutional infrastructure if GitHub storage is not the final destination
 - ensure the manuscript's reported model checkpoints, figure-generation scripts, and accession links match the tagged release
 
