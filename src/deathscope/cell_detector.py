@@ -195,7 +195,11 @@ class CellDetector:
         trimmed_background = background_map
 
         if Pyro_pred:
-            apoptosis_map, necroptosis_map, pyroptosis_map = self._split_pyroptosis(apoptosis_map, necroptosis_map)
+            apoptosis_map, necroptosis_map, pyroptosis_map = self._split_pyroptosis(
+                apoptosis_map,
+                necroptosis_map,
+                trimmed_phase,
+            )
             outputs: List[object] = [apoptosis_map, necroptosis_map, pyroptosis_map, trimmed_background]
         else:
             outputs = [apoptosis_map, necroptosis_map, trimmed_background]
@@ -558,6 +562,7 @@ class CellDetector:
         self,
         apoptosis_map: ImageLike,
         necroptosis_map: ImageLike,
+        phase_image: ImageLike,
     ) -> Tuple[ImageLike, ImageLike, ImageLike]:
         pyroptosis_map = apoptosis_map.copy()
         apoptosis_regions = self._binary_regions(apoptosis_map)
@@ -568,8 +573,8 @@ class CellDetector:
             coords = np.asarray(region, dtype=np.int32)
             min_r, min_c = coords.min(axis=0)
             max_r, max_c = coords.max(axis=0)
-            cropped_region = apoptosis_map[min_r : max_r + 1, min_c : max_c + 1]
-            cropped_region_rgb = cv2.cvtColor((cropped_region * 255).astype(np.uint8), cv2.COLOR_GRAY2RGB)
+            cropped_region = phase_image[min_r : max_r + 1, min_c : max_c + 1]
+            cropped_region_rgb = cv2.cvtColor(cropped_region.astype(np.uint8), cv2.COLOR_GRAY2RGB)
             pred_class = _get_pyro_predictor().Pyro_Pred(cropped_region_rgb)
 
             if pred_class == "pyroptosis":

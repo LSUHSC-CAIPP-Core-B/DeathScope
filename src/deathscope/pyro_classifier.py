@@ -29,7 +29,7 @@ ImageLike = np.ndarray
 PathLike = Union[str, Path]
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_MODEL_PATH = PACKAGE_ROOT / "models" / "pyroptosis" / "convnext_large_model_best.pth"
+DEFAULT_MODEL_PATH = PACKAGE_ROOT / "models" / "pyroptosis" / "model_best.pth"
 DEFAULT_CLASSES_PATH = PACKAGE_ROOT / "models" / "pyroptosis" / "classes.json"
 DEFAULT_IMAGE_SIZE = 48
 DEFAULT_ARCHITECTURE = "convnext_large.fb_in22k_ft_in1k"
