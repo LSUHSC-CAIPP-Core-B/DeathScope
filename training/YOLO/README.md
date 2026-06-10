@@ -98,9 +98,3 @@ Training outputs, metrics, checkpoints, and plots are written by Ultralytics und
 ## Notebook Workflow
 
 `train_yolo.ipynb` is provided for interactive experimentation, inspection of training results, and ad hoc model evaluation. The script is the recommended entrypoint for repeatable training runs.
-
-## Notes
-
-- Keep dataset paths out of version control if they are machine-specific.
-- Prefer the script for documented and reproducible experiments.
-- Confirm class ordering in labels and YAML before training. A mismatch will silently corrupt the model targets.
