@@ -43,13 +43,9 @@ This repository contains the public code release for the core DeathScope detecti
 .
 ├── README.md
 ├── LICENSE
-├── CODE_OF_CONDUCT.md
 ├── requirements.txt
 ├── pyproject.toml
 ├── CITATION.cff
-├── CODE_AVAILABILITY.md
-├── DATA_AVAILABILITY.md
-├── REPRODUCIBILITY.md
 ├── configs/
 │   ├── README.md
 │   └── cell_dataset.yaml
@@ -66,9 +62,11 @@ This repository contains the public code release for the core DeathScope detecti
 │   ├── README.md
 │   ├── pyroptosis/
 │   │   ├── classes.json
-│   │   └── convnext_large_model_best.pth
+│   │   └── model_best.pth
 │   └── yolo/
 │       └── deathscope_yolov8l.pt
+├── outputs/
+│   └── logs/
 ├── scripts/
 │   ├── README.md
 │   └── batch_predict.py
@@ -83,8 +81,8 @@ This repository contains the public code release for the core DeathScope detecti
     ├── ConvNeXt/
     │   ├── README.md
     │   ├── ConvNeXt-Large_DataPreparation.ipynb
-    │   ├── ConvNeXt-Large_training.ipynb
     │   ├── ConvNeXt-Large_plot.ipynb
+    │   ├── ConvNeXt-Large_training.ipynb
     │   └── ConvNeXt-Large_prediction.ipynb
     └── YOLO/
         ├── README.md
@@ -227,14 +225,6 @@ ConvNeXt classifier preparation, training, plotting, and prediction notebooks ar
 - optional pyroptosis reassignment maps
 - per-image and aggregated kinetics CSV files
 - overlay PNGs for visual inspection
-
-## Release Guidance
-
-Before public submission or publication, confirm the following:
-
-- replace placeholder URLs and DOIs in the availability documents with final archival links
-- move large raw datasets and final trained weights to an archival host such as Zenodo, Figshare, or institutional infrastructure if GitHub storage is not the final destination
-- ensure the manuscript's reported model checkpoints, figure-generation scripts, and accession links match the tagged release
 
 ## Limitations
 
