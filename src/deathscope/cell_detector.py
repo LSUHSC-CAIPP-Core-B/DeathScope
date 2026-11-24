@@ -469,36 +469,100 @@ class CellDetector:
         imageG: ImageLike,
         Acutoff: float = 0.0,
         Ncutoff: float = 0.0,
-        Gcutoff: float = 0,
+        Gcutoff: float = 0.0,
+        IOU: float = 0.0,
     ) -> List[float]:
-        """Evaluate predicted apoptosis and necroptosis maps against a green-channel reference."""
-        imageG = np.where(imageG > Gcutoff, imageG, 0)
-        imageA = np.where(imageA > Acutoff, imageA, 0)
-        imageN = np.where(imageN > Ncutoff, imageN, 0)
+        """Evaluate predictions against SYTOX Green connected regions.
 
-        regions_necroptosis = self.find_closed_regions(np.where(imageN == 0, 0, 1))
-        regions_apoptosis = self.find_closed_regions(np.where(imageA == 0, 0, 1))
-        regions_green = self.find_closed_regions(np.where(imageG == 0, 0, 1))
+        ``IOU`` is a percentage of each green region covered by an individual
+        prediction (intersection over green area), rather than conventional IoU.
+        Zero accepts any nonzero overlap; 100 requires full green coverage.
+        Matching uses eight-connected regions and permits many-to-many matches
+        after the existing four-connected class conflict resolution.
 
-        imageN_m = self.compare_and_modify(imageN, imageA, regions_necroptosis)
-        imageA_m = self.compare_and_modify(imageA, imageN, regions_apoptosis)
+        Return [TP_A, TP_N, green_count, recall, FN_rate, FP_A, FP_N]. A green
+        region can contribute to both class counts but only once to recall.
+        Unmatched prediction regions are false positives. Recall and FN rate
+        are NaN when there are no green regions.
+        """
+        if not 0 <= IOU <= 100:
+            raise ValueError("IOU must be between 0 and 100")
+        if not (imageA.shape == imageN.shape == imageG.shape):
+            raise ValueError("All images must have identical shapes")
+        if imageA.ndim != 2:
+            raise ValueError("All images must be 2D")
 
-        totals_imageA = self.calculate_region_totals(imageA_m, regions_green)
-        totals_imageN = self.calculate_region_totals(imageN_m, regions_green)
-        tp_a = len([value for value in totals_imageA.values() if value > 0])
-        tp_n = len([value for value in totals_imageN.values() if value > 0])
+        threshold = IOU / 100.0
+        image_green = np.where(imageG > Gcutoff, imageG, 0)
+        image_apoptosis = np.where(imageA > Acutoff, imageA, 0)
+        image_necroptosis = np.where(imageN > Ncutoff, imageN, 0)
 
-        green_region_count = max(len(regions_green), 1)
-        tp = (tp_a + tp_n) / green_region_count
-        fn = 1 - tp
+        regions_necroptosis = self.find_closed_regions(image_necroptosis > 0)
+        regions_apoptosis = self.find_closed_regions(image_apoptosis > 0)
+        modified_necroptosis = self.compare_and_modify(
+            image_necroptosis, image_apoptosis, regions_necroptosis
+        )
+        modified_apoptosis = self.compare_and_modify(
+            image_apoptosis, image_necroptosis, regions_apoptosis
+        )
 
-        totals_imageG_A = self.calculate_region_totals(imageG, regions_apoptosis)
-        fp_a = len([value for value in totals_imageG_A.values() if value == 0])
+        green_count, green_labels = cv2.connectedComponents(
+            (image_green > 0).astype(np.uint8), connectivity=8
+        )
+        apoptosis_count, apoptosis_labels = cv2.connectedComponents(
+            (modified_apoptosis > 0).astype(np.uint8), connectivity=8
+        )
+        necroptosis_count, necroptosis_labels = cv2.connectedComponents(
+            (modified_necroptosis > 0).astype(np.uint8), connectivity=8
+        )
+        # OpenCV includes the background in each component count.
+        green_count -= 1
+        apoptosis_count -= 1
+        necroptosis_count -= 1
 
-        totals_imageG_N = self.calculate_region_totals(imageG, regions_necroptosis)
-        fp_n = len([value for value in totals_imageG_N.values() if value == 0])
+        def match_green_coverage(
+            prediction_labels: ImageLike,
+            prediction_count: int,
+        ) -> Tuple[ImageLike, ImageLike]:
+            """Mark green and prediction regions whose pairwise coverage qualifies."""
+            matched_green = np.zeros(green_count, dtype=bool)
+            matched_predictions = np.zeros(prediction_count, dtype=bool)
+            if green_count == 0 or prediction_count == 0:
+                return matched_green, matched_predictions
 
-        return [tp_a, tp_n, len(regions_green), tp, fn, fp_a, fp_n]
+            green_areas = np.bincount(green_labels.ravel(), minlength=green_count + 1)[1:]
+            overlap_mask = (green_labels > 0) & (prediction_labels > 0)
+            if not np.any(overlap_mask):
+                return matched_green, matched_predictions
+
+            # Encode overlapping region pairs without allocating a dense pair matrix.
+            pair_ids = (
+                green_labels[overlap_mask].astype(np.int64) * (prediction_count + 1)
+                + prediction_labels[overlap_mask].astype(np.int64)
+            )
+            unique_pairs, counts = np.unique(pair_ids, return_counts=True)
+            green_indices = (unique_pairs // (prediction_count + 1)).astype(int) - 1
+            prediction_indices = (unique_pairs % (prediction_count + 1)).astype(int) - 1
+            coverage = counts / green_areas[green_indices]
+            valid = (counts > 0) & (coverage >= threshold)
+            matched_green[green_indices[valid]] = True
+            matched_predictions[prediction_indices[valid]] = True
+            return matched_green, matched_predictions
+
+        matched_green_apoptosis, matched_apoptosis = match_green_coverage(
+            apoptosis_labels, apoptosis_count
+        )
+        matched_green_necroptosis, matched_necroptosis = match_green_coverage(
+            necroptosis_labels, necroptosis_count
+        )
+        tp_a = int(np.sum(matched_green_apoptosis))
+        tp_n = int(np.sum(matched_green_necroptosis))
+        tp_total = int(np.sum(matched_green_apoptosis | matched_green_necroptosis))
+        fp_a = int(np.sum(~matched_apoptosis))
+        fp_n = int(np.sum(~matched_necroptosis))
+        recall = tp_total / green_count if green_count else np.nan
+        fn_rate = 1.0 - recall if green_count else np.nan
+        return [tp_a, tp_n, green_count, recall, fn_rate, fp_a, fp_n]
 
     # |----------------------INTERNAL HELPERS--------------------------------------------|
 
